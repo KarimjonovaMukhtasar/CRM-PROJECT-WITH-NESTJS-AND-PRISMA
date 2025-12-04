@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model branch {
+  id     String   @default(uuid()) @id
+  name   String   @unique
+  name   String?
+  posts  Post[]
+}
+
+model room {
+  id        Int      @default(autoincrement()) @id
+  title     String
+  content   String?
+  published Boolean? @default(false)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+model group {
+  id    String  @default(uuid()) @id
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model course {
+  id    String  @default(uuid()) @id
+  email String  @unique
+  name  String?
+  posts Post[]
+
+}
