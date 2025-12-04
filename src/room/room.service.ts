@@ -84,7 +84,7 @@ export class RoomService {
           throw new ConflictException(
             `THIS ROOM NAME ALREADY EXISTS IN THE DATABASE`,
           );
-        }
+        }}
         const branchId = updateRoomDto.branchId;
         if (branchId) {
           const checkId = await this.prisma.branch.findUnique({
@@ -104,7 +104,7 @@ export class RoomService {
           data: updatedRoom,
         };
       }
-    } catch (error) {
+    catch (error) {
       return { message: error.message };
     }
   }

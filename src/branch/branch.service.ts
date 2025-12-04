@@ -69,7 +69,7 @@ export class BranchService {
           const checkDuplicate = await this.prisma.branch.findUnique({where: {name}})
           if(checkDuplicate){
             throw new ConflictException(`THIS BRANCH NAME ALREADY EXISTS IN THE DATABASE`)
-          }
+          }}
           const updatedBranch = await this.prisma.branch.update({where: {id}, data: {...updateBranchDto}, include: {rooms: true, groups: true, courses: true}})
           return {
             success: true,
@@ -77,7 +77,7 @@ export class BranchService {
             data: updatedBranch
           }
         }
-    } catch (error) {
+     catch (error) {
          return {message: error.message};
     }
   }
