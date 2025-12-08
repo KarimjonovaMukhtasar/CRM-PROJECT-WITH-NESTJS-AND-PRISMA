@@ -2,11 +2,14 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { CreateBranchDto } from './dto/create-branch.dto';
 import { UpdateBranchDto } from './dto/update-branch.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CloudinaryService } from 'nestjs-cloudinary';
 
 @Injectable()
 export class BranchService {
-  constructor(private readonly prisma: PrismaService) {}
-  async create(createBranchDto: CreateBranchDto) {
+  constructor(private readonly prisma: PrismaService, 
+      private readonly cloudinaryService: CloudinaryService
+  ) {}
+  async create(createBranchDto: CreateBranchDto, logo: Express.Multer.File ) {
     try {
       const checkDuplicate = await this.prisma.branch.findUnique({
         where: { name: createBranchDto.name },
@@ -16,8 +19,13 @@ export class BranchService {
           `THIS BRANCH ALREADY EXISTS IN THE DATABASE!`,
         );
       }
+      let imageUrl = null
+      if(logo){
+        const uploaded = await this.cloudinaryService.uploadFile(logo)
+        imageUrl = uploaded.url
+      }
       const newBranch = await this.prisma.branch.create({
-        data: createBranchDto,
+        data: {...createBranchDto, logo: imageUrl},
       });
       return {
         success: true,
@@ -60,16 +68,20 @@ export class BranchService {
     }
   }
 
-  async update(id: string, updateBranchDto: UpdateBranchDto) {
+  async update(id: string, updateBranchDto: UpdateBranchDto, logo: Express.Multer.File) {
     try {
         const checkId = await this.prisma.branch.findUnique({where: {id}})
         if(!checkId) throw new NotFoundException(`NOT FOUND SUCH A BRANCH ID!`)
         const name = updateBranchDto.name
-        if(name){
+        if(name && name !== checkId.name){
           const checkDuplicate = await this.prisma.branch.findUnique({where: {name}})
           if(checkDuplicate){
             throw new ConflictException(`THIS BRANCH NAME ALREADY EXISTS IN THE DATABASE`)
           }}
+          if(logo){
+            const {url} = await this.cloudinaryService.uploadFile(logo)
+            updateBranchDto.logo = url
+          } 
           const updatedBranch = await this.prisma.branch.update({where: {id}, data: {...updateBranchDto}, include: {rooms: true, groups: true, courses: true}})
           return {
             success: true,
