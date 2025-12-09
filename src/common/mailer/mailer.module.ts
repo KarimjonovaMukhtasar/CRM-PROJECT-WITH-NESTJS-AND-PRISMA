@@ -4,16 +4,21 @@ import { MailerService } from "./mailer.service";
 import { Global, Module } from "@nestjs/common";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { join } from "path";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Global()
 @Module({
     imports: [
-        NestMailerModule.forRoot({
-            transport: {
+        ConfigModule.forRoot({isGlobal: true}),
+        NestMailerModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: ((config: ConfigService) => ({
+                transport: {
                 service: "gmail",
                 auth: {
-                    user: "karimjonovamukhtasar2003@gmail.com",
-                    pass: "tawr xonr olrn rovc"
+                    user: config.get("email"),
+                    pass: config.get("pass")
                 }
             },
             defaults: {
@@ -26,6 +31,7 @@ import { join } from "path";
                         strict: true
                     }
                 }
+            }))
         })
     ],
     providers: [MailerService],

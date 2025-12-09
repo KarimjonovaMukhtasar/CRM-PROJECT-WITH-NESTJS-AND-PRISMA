@@ -9,13 +9,15 @@ import { UpdateStudentDto } from "./dto/update-student.dto";
 import { MailerService } from "src/common/mailer/mailer.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CloudinaryService } from "nestjs-cloudinary";
+import { RedisService } from "src/common/reddis/redis.service";
 
 @Injectable()
 export class StudentService {
   constructor(
     private mailerService: MailerService,
     private prisma: PrismaService,
-    private readonly cloudinaryService: CloudinaryService
+    private readonly cloudinaryService: CloudinaryService,
+    private readonly redisService: RedisService
   ) {}
   async create(createStudentDto: CreateStudentDto, photo: Express.Multer.File) {
     try {
@@ -51,6 +53,7 @@ export class StudentService {
         "THE VERIFICATION CODE HAS BEEN SENT TO THE EMAIL! ",
         code
       );
+      await this.redisService.set(createStudentDto.email, code, 600)
       const newStudent = await this.prisma.student.create({
         data: { ...createStudentDto, photo: imageUrl }
       });

@@ -15,6 +15,8 @@ import { StudentModule } from './student/student.module';
 import { StaffModule } from './staff/staff.module';
 import { StudentGroupModule } from './student-group/student-group.module';
 import { TeacherGroupModule } from './teacher-group/teacher-group.module';
+import { MailerModule } from "./common/mailer/mailer.module";
+import { RedisModule } from "./common/reddis/redis.module";
 
 @Module({
   imports: [
@@ -39,7 +41,9 @@ import { TeacherGroupModule } from './teacher-group/teacher-group.module';
     StudentModule,
     StaffModule,
     StudentGroupModule,
-    TeacherGroupModule
+    TeacherGroupModule,
+    MailerModule,
+    RedisModule
   ],
   controllers: [AppController],
   providers: [AppService]
