@@ -13,7 +13,7 @@ export class RoomService {
   async create(createRoomDto: CreateRoomDto) {
     try {
       const checkDuplicate = await this.prisma.room.findUnique({
-        where: { name: createRoomDto.name },
+        where: { name_branchId: {name: createRoomDto.name, branchId: createRoomDto.branchId }},
       });
       if (checkDuplicate) {
         throw new ConflictException(
@@ -78,7 +78,7 @@ export class RoomService {
       const name = updateRoomDto.name;
       if (name) {
         const checkDuplicate = await this.prisma.room.findUnique({
-          where: { name },
+          where: { name_branchId: {name, branchId: checkId.branchId} },
         });
         if (checkDuplicate) {
           throw new ConflictException(

@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { MailerService } from 'src/common/mailer/mailer.service';
 
 @Injectable()
 export class StudentService {
-  create(createStudentDto: CreateStudentDto) {
-    return 'This action adds a new student';
+  constructor(private mailerService: MailerService){}
+  async create(createStudentDto: CreateStudentDto) {
+      const code = Math.floor(Math.random() * 1000000)
+      await this.mailerService.sendEmail(createStudentDto.email, "Bu tasdiqlash kodi", code)
+    return {
+      success: true,
+      message: `TASDIQLASH KODI YUBORILDI`
+    };
   }
 
   findAll() {

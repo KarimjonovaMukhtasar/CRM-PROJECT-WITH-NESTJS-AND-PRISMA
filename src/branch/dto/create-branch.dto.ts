@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Status } from '@prisma/client';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateBranchDto {
   @IsString()
@@ -12,4 +13,9 @@ export class CreateBranchDto {
   @IsString()
   @IsNotEmpty()
   address: string;
+
+  
+    @IsOptional()
+    @IsEnum(Status)
+    status: Status
 }

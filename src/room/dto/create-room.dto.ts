@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID } from 'class-validator';
+import { Status } from '@prisma/client';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
 
 export class CreateRoomDto {
   @IsString()
@@ -13,4 +14,8 @@ export class CreateRoomDto {
   @IsUUID()
   @IsNotEmpty()
   branchId: string;
+
+    @IsOptional()
+    @IsEnum(Status)
+    status: Status
 }

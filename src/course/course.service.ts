@@ -8,8 +8,8 @@ export class CourseService {
   constructor(private readonly prisma: PrismaService) {}
     async create(createCourseDto: CreateCourseDto) {
       try {
-        const checkDuplicate = await this.prisma.course.findFirst({
-          where: { name: createCourseDto.name , branchId: createCourseDto.branchId },
+        const checkDuplicate = await this.prisma.course.findUnique({
+          where: { name_branchId: {name: createCourseDto.name, branchId: createCourseDto.branchId} },
         });
         if (checkDuplicate) {
           throw new ConflictException(
@@ -73,7 +73,7 @@ export class CourseService {
         const name = updateCourseDto.name;
         if (name) {
           const checkDuplicate = await this.prisma.course.findUnique({
-            where: { name },
+            where: { name_branchId: {name, branchId: checkId.branchId}},
           });
           if (checkDuplicate) {
             throw new ConflictException(

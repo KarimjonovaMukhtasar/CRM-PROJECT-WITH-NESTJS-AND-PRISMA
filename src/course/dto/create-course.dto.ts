@@ -1,4 +1,6 @@
-import { IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
+import { CourseLevel } from '@prisma/client';
+import { Status } from '@prisma/client';
 
 export class CreateCourseDto {
   @IsString()
@@ -10,10 +12,9 @@ export class CreateCourseDto {
   @IsPositive()
   price: number;
 
-
-  @IsString()
+  @IsEnum(CourseLevel)
   @IsNotEmpty()
-  level: string;
+  level: CourseLevel;
 
   @IsNumber()
   @IsNotEmpty()
@@ -23,5 +24,9 @@ export class CreateCourseDto {
   @IsUUID()
   @IsNotEmpty()
   branchId: string;
+
+  @IsOptional()
+  @IsEnum(Status)
+  status: Status
 }
 
