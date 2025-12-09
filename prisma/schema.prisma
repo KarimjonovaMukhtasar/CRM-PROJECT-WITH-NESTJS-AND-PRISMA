@@ -127,6 +127,7 @@ model Teacher {
 
   branch       Branch   @relation(fields: [branchId], references: [id])
   @@map("teachers")
+  @@unique([email, branchId])
 }
 
 model TeacherGroup {
@@ -162,6 +163,7 @@ model Student {
 
   branch       Branch   @relation(fields: [branchId], references: [id])
   @@map("students")
+  @@unique([email, branchId])
 }
 
 
@@ -196,4 +198,5 @@ model Staff {
 
   branch       Branch   @relation(fields: [branchId], references: [id])
   @@map("staff")
+  @@unique([email, branchId])
 }
