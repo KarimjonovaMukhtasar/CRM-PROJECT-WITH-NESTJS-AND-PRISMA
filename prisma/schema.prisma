@@ -21,8 +21,9 @@ enum Status {
 }
 
 enum StaffRole {
-  ACTIVE
-  INACTIVE
+  ADMIN
+  SUPERADMIN
+  MANAGER
 }
 
 
@@ -48,6 +49,7 @@ model Branch {
   @@map("branches")
 }
 
+
 model Room {
   id           String      @default(uuid()) @id
   name         String   
@@ -64,7 +66,6 @@ model Room {
    @@map("rooms")
    @@unique([name, branchId])
 }
-
 
 
 model Course {

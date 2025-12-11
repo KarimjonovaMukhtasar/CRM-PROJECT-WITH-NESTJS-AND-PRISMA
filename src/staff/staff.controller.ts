@@ -1,15 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, BadRequestException, UploadedFile } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import multer from 'multer';
 
 @Controller('staff')
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
   @Post()
-  create(@Body() createStaffDto: CreateStaffDto) {
-    return this.staffService.create(createStaffDto);
+  @UseInterceptors(FileInterceptor('photo', { storage: multer.memoryStorage(),  fileFilter: (req, file, cb) => {
+          if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+            return cb(new BadRequestException('Only image files are allowed!'), false);
+          }
+          cb(null, true);}}))
+  create(@UploadedFile() photo: Express.Multer.File, @Body() createStaffDto: CreateStaffDto) {
+    return this.staffService.create(createStaffDto, photo);
   }
 
   @Get()
@@ -19,16 +26,17 @@ export class StaffController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.staffService.findOne(+id);
+    return this.staffService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStaffDto: UpdateStaffDto) {
-    return this.staffService.update(+id, updateStaffDto);
+   @UseInterceptors(FileInterceptor('photo'))
+  update(@Param('id') id: string, @Body() updateStaffDto: UpdateStaffDto, photo: Express.Multer.File) {
+    return this.staffService.update(id, updateStaffDto, photo);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.staffService.remove(+id);
+    return this.staffService.remove(id);
   }
 }
