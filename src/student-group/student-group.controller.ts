@@ -19,16 +19,16 @@ export class StudentGroupController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.studentGroupService.findOne(+id);
+    return this.studentGroupService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateStudentGroupDto: UpdateStudentGroupDto) {
-    return this.studentGroupService.update(+id, updateStudentGroupDto);
+    return this.studentGroupService.update(id, updateStudentGroupDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.studentGroupService.remove(+id);
+    return this.studentGroupService.remove(id);
   }
 }

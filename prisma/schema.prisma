@@ -132,6 +132,7 @@ model Teacher {
 }
 
 model TeacherGroup {
+  id          String       @default(uuid())  @id
    teacherId   String
    branchId    String
    groupId     String
@@ -169,6 +170,7 @@ model Student {
 
 
 model StudentGroup {
+   id          String       @default(uuid())  @id
    studentId   String
    branchId    String
    groupId     String
